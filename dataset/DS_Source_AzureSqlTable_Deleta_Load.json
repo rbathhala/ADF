@@ -1,0 +1,40 @@
+{
+	"name": "DS_Source_AzureSqlTable_Deleta_Load",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Cid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CName",
+				"type": "varchar"
+			},
+			{
+				"name": "CAmount",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CAddress",
+				"type": "varchar"
+			},
+			{
+				"name": "Source_Date",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Source_Data"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

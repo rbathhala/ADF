@@ -1,0 +1,31 @@
+{
+	"name": "DS_last_Process_Date_AzureSqlTable_Delta_Load",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Target_Table_Name",
+				"type": "varchar"
+			},
+			{
+				"name": "Last_Processed_Date",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Last_Processed_Data_Target_Table"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

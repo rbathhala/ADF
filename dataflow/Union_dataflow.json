@@ -1,0 +1,91 @@
+{
+	"name": "Union_dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Goa_Blob_Source_DF",
+						"type": "DatasetReference"
+					},
+					"name": "GoaSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Hyd_Blob_Source_DF",
+						"type": "DatasetReference"
+					},
+					"name": "HydSource"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_Pune_Gen2_Source_DF",
+						"type": "DatasetReference"
+					},
+					"name": "PuneSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Target_Blob_DF",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "union1"
+				},
+				{
+					"name": "Puneselect"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          SID as integer,",
+				"          SName as string,",
+				"          Fee as integer,",
+				"          Addres as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> GoaSource",
+				"source(output(",
+				"          SID as integer,",
+				"          SName as string,",
+				"          Fee as integer,",
+				"          Addres as string,",
+				"          DID as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> HydSource",
+				"source(output(",
+				"          EID as short,",
+				"          EName as string,",
+				"          Addres as string,",
+				"          Esalary as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> PuneSource",
+				"GoaSource, HydSource, Puneselect union(byName: false)~> union1",
+				"PuneSource select(mapColumn(",
+				"          EID,",
+				"          EName,",
+				"          Esalary,",
+				"          Addres",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> Puneselect",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

@@ -1,0 +1,9 @@
+{
+	"name": "RADFAccount",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "262c27de-517d-4778-943f-4eb35c4ecc97",
+		"tenantId": "cbb3927d-b08e-4aba-9fdf-f2efeac54e35"
+	}
+}

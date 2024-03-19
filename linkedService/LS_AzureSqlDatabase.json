@@ -1,0 +1,12 @@
+{
+	"name": "LS_AzureSqlDatabase",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=rajesh5690.database.windows.net;initial catalog=SQLDB;user id=rajesh5690",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEY0MTU4OTU1LUZDRDYtNDc2Ni05M0E4LUZCN0REMEMyRTk3Ml84NTlkODE2MC05NTQ1LTRlYTAtODc0Mi0wZDM1NzFmZjNjZmUiDQp9"
+		}
+	}
+}

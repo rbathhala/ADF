@@ -1,0 +1,41 @@
+{
+	"name": "DS_Pune_Gen2_Source_DF",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_AzureDataLakeStorageGen2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Pune_2023-Apr-09.txt",
+				"fileSystem": "pune"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "EID",
+				"type": "String"
+			},
+			{
+				"name": "EName",
+				"type": "String"
+			},
+			{
+				"name": "Esalary",
+				"type": "String"
+			},
+			{
+				"name": "Addres",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

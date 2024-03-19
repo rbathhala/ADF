@@ -1,0 +1,215 @@
+{
+	"name": "Delta_Load_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Delta Load Copy data",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Last Processed Date Lookup",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Max Source Date Lookup",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "select * from Source_Data where Source_Date >'@{activity('Last Processed Date Lookup').output.firstRow.Last_Processed_Date}'",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Cid",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "Cid",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "CName",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "CName",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CAmount",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "CAmount",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "CAddress",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "CAddress",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_Source_AzureSqlTable_Deleta_Load",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_Target_AzureSqlTable_Delta_Load",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Last Processed Date Lookup",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_last_Process_Date_AzureSqlTable_Delta_Load",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Max Source Date Lookup",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select max(Source_Date) as Max_Source_Date from Source_Data\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_Source_AzureSqlTable_Deleta_Load",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Last Proceed Date Stored procedure",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Delta Load Copy data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[Proc_Update_Last_Processed]",
+					"storedProcedureParameters": {
+						"Last_Processed_Date": {
+							"value": {
+								"value": "@activity('Max Source Date Lookup').output.firstRow.Max_Source_Date\n",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						},
+						"Target_Table_Name": {
+							"value": {
+								"value": "@activity('Last Processed Date Lookup').output.firstRow.Target_Table_Name",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-03-14T11:46:41Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

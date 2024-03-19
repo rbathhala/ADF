@@ -1,0 +1,41 @@
+{
+	"name": "DS_Goa_Blob_Source_DF",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_BLOBStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Goa.txt",
+				"container": "landing"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "SID",
+				"type": "String"
+			},
+			{
+				"name": "SName",
+				"type": "String"
+			},
+			{
+				"name": "Fee",
+				"type": "String"
+			},
+			{
+				"name": "Addres",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
